@@ -1,7 +1,7 @@
-import { HttpResponse } from '../proptocols/http'
+import { HttpRequest, HttpResponse } from '../proptocols/http'
 
 export class LoadProjectController {
-  async handle (): Promise<HttpResponse> {
+  async handle (req: HttpRequest): Promise<HttpResponse> {
     return { statusCode: 400 }
   }
 }
