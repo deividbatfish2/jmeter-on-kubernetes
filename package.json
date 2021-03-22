@@ -10,7 +10,8 @@
     "test:unit": "npm t -- --watch -c jest.unit.config.js",
     "test:staged": "npm t -- --findRelatedTests",
     "test:ci": "npm t -- --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,0 @@
-{
-    "hooks": {
-        "pre-commit": "npm build",
-        "pre-push:": "npm run test:ci"
-    }
-}
