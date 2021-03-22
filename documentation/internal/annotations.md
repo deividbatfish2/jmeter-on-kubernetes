@@ -1,5 +1,10 @@
 # Annotations
-### Runnig kubctl inside yhe k8s
+### Create a project
+fieds:
+ * Name
+ * Description
+ * JmxProvider
+### Runnig kubctl inside the k8s
 To running kubectl inside a pod, is necessary build roles that allow the commands run with success.
 Build a ServiceAccount, a Roleand a RoleBinding.
 
