@@ -1,4 +1,4 @@
-import { HttpRequest, HttpResponse } from '../proptocols/http'
+import { HttpRequest, HttpResponse } from '../protocols/http'
 
 export class LoadProjectController {
   async handle (req: HttpRequest): Promise<HttpResponse> {
