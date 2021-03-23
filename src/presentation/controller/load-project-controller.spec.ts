@@ -2,7 +2,7 @@ import { JmxProvider } from '../../domain/models/jmx-provider'
 import { LoadProjectModel } from '../../domain/models/load-project-model'
 import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-project/add-load-project'
 import { HttpRequest } from '../protocols/http'
-import { created } from '../utils/http-responses'
+import { created, serverError } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -84,12 +84,12 @@ describe('LoadProjectController', () => {
       expect(addSpy).toHaveBeenCalledWith(makeFakeRequest().body)
     })
 
-    test('Should return 500 if AddLoadProject throws', async () => {
+    test('Should return 500 (serverError) if AddLoadProject throws', async () => {
       const { sut, addLoadProjectStub } = makeSut()
       jest.spyOn(addLoadProjectStub, 'add')
         .mockImplementationOnce(() => { throw new Error() })
       const result = await sut.handle(makeFakeRequest())
-      expect(result.statusCode).toBe(500)
+      expect(result).toStrictEqual(serverError())
     })
   })
 
