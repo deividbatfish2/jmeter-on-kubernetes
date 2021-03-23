@@ -1,9 +1,11 @@
 import { JmxProvider } from '../../domain/models/jmx-provider'
 import { LoadProjectModel } from '../../domain/models/load-project-model'
 import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-project/add-load-project'
+import { HttpRequest } from '../protocols/http'
+import { created } from '../utils/responses'
 import { LoadProjectController } from './load-project-controller'
 
-const makeFakeRequest = (): any => ({
+const makeFakeRequest = (): HttpRequest => ({
   body: { name: 'Any Name', description: 'Any description', jmxProvider: JmxProvider.GIT, command: 'any command' }
 })
 
@@ -88,6 +90,14 @@ describe('LoadProjectController', () => {
         .mockImplementationOnce(() => { throw new Error() })
       const result = await sut.handle(makeFakeRequest())
       expect(result.statusCode).toBe(500)
+    })
+  })
+
+  describe('Sucess', () => {
+    test('Should return 201 (created) on success', async () => {
+      const { sut } = makeSut()
+      const result = await sut.handle(makeFakeRequest())
+      expect(result).toStrictEqual(created())
     })
   })
 })
