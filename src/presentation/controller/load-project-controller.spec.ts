@@ -4,7 +4,7 @@ import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-
 import { LoadProjectController } from './load-project-controller'
 
 const makeFakeRequest = (): any => ({
-  body: { name: 'Any Name', description: 'Any description', jmxProvider: 'any_provider', command: 'any command' }
+  body: { name: 'Any Name', description: 'Any description', jmxProvider: JmxProvider.GIT, command: 'any command' }
 })
 
 const makeAddLoadProjectStub = (): AddLoadProject => {
@@ -55,8 +55,14 @@ describe('LoadProjectController', () => {
     test('should return 400 if jmxProvider is not provided', async () => {
       const { sut } = makeSut()
       const { body: { jmxProvider, ...requestWithoutJmxProvider } } = makeFakeRequest()
-      console.log(requestWithoutJmxProvider)
       const result = await sut.handle({ body: requestWithoutJmxProvider })
+      expect(result.statusCode).toBe(400)
+    })
+
+    test('should return 400 if jmxProvider is not recognized', async () => {
+      const { sut } = makeSut()
+      const httpRequest = { ...makeFakeRequest().body, ...{ jmxProvider: 'ANY_JMX_PROVIDER' } }
+      const result = await sut.handle({ body: httpRequest })
       expect(result.statusCode).toBe(400)
     })
 
