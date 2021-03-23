@@ -1,6 +1,7 @@
 import { JmxProvider } from '../../domain/models/jmx-provider'
 import { AddLoadProject } from '../../domain/usecases/load-project/add-load-project'
 import { HttpRequest, HttpResponse } from '../protocols/http'
+import { created } from '../utils/responses'
 
 export class LoadProjectController {
   constructor (private readonly addLoadProject: AddLoadProject) {}
@@ -13,7 +14,7 @@ export class LoadProjectController {
 
     try {
       await this.addLoadProject.add({ name, description, jmxProvider, command })
-      return { statusCode: 201 }
+      return created()
     } catch (e) {
       return { statusCode: 500 }
     }
