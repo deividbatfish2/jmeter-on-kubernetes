@@ -76,6 +76,12 @@ describe('LoadProjectController', () => {
       expect(addSpy).toHaveBeenCalledWith(makeFakeRequest().body)
     })
 
-    test.todo('Should return 500 if AddLoadProject throws')
+    test('Should return 500 if AddLoadProject throws', async () => {
+      const { sut, addLoadProjectStub } = makeSut()
+      jest.spyOn(addLoadProjectStub, 'add')
+        .mockImplementationOnce(() => { throw new Error() })
+      const result = await sut.handle(makeFakeRequest())
+      expect(result.statusCode).toBe(500)
+    })
   })
 })
