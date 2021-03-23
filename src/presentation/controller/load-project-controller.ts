@@ -8,7 +8,11 @@ export class LoadProjectController {
     const { name, description, jmxProvider, command } = req.body
     if (!name || !description || !jmxProvider || !command) { return { statusCode: 400 } }
 
-    await this.addLoadProject.add({ name, description, jmxProvider, command })
-    return { statusCode: 201 }
+    try {
+      await this.addLoadProject.add({ name, description, jmxProvider, command })
+      return { statusCode: 201 }
+    } catch (e) {
+      return { statusCode: 500 }
+    }
   }
 }
