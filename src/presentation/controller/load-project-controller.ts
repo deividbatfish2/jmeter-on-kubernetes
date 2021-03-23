@@ -9,9 +9,6 @@ export class LoadProjectController {
     const { name, description, jmxProvider, command } = req.body
     if (!name || !description || !jmxProvider || !command) { return { statusCode: 400 } }
 
-    console.log(jmxProvider)
-    console.log(Object.values(JmxProvider))
-
     if (!Object.values(JmxProvider).includes(jmxProvider)) { return { statusCode: 400 } }
 
     try {
