@@ -1,3 +1,3 @@
 export enum JmxProvider {
-  GIT
+  GIT = 'git'
 }
