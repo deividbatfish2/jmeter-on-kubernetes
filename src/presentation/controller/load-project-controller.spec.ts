@@ -2,7 +2,7 @@ import { JmxProvider } from '../../domain/models/jmx-provider'
 import { LoadProjectModel } from '../../domain/models/load-project-model'
 import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-project/add-load-project'
 import { HttpRequest } from '../protocols/http'
-import { created } from '../utils/responses'
+import { created } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
 
 const makeFakeRequest = (): HttpRequest => ({

@@ -1,7 +1,7 @@
 import { JmxProvider } from '../../domain/models/jmx-provider'
 import { AddLoadProject } from '../../domain/usecases/load-project/add-load-project'
 import { HttpRequest, HttpResponse } from '../protocols/http'
-import { created } from '../utils/responses'
+import { created } from '../utils/http-responses'
 
 export class LoadProjectController {
   constructor (private readonly addLoadProject: AddLoadProject) {}
