@@ -1,7 +1,4 @@
-import { JmxProvider } from '../../domain/models/jmx-provider'
-import { LoadProjectModel } from '../../domain/models/load-project-model'
-import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-project/add-load-project'
-import { HttpRequest } from '../protocols/http'
+import { JmxProvider, LoadProjectModel, AddLoadProject, AddLoadProjectModel, HttpRequest } from './load-project-controller-protocols'
 import { badRequest, created, serverError } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
 import { RequiredFieldError } from '../error/required-field-error'
