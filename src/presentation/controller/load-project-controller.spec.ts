@@ -2,8 +2,10 @@ import { JmxProvider } from '../../domain/models/jmx-provider'
 import { LoadProjectModel } from '../../domain/models/load-project-model'
 import { AddLoadProject, AddLoadProjectModel } from '../../domain/usecases/load-project/add-load-project'
 import { HttpRequest } from '../protocols/http'
-import { created, serverError } from '../utils/http-responses'
+import { badRequest, created, serverError } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
+import { RequiredFieldError } from '../error/required-field-error'
+import { InvalidFieldError } from '../error/invalid-field-error'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { name: 'Any Name', description: 'Any description', jmxProvider: JmxProvider.GIT, command: 'any command' }
@@ -40,39 +42,39 @@ const makeSut = (): SutTypes => {
 
 describe('LoadProjectController', () => {
   describe('Validations', () => {
-    test('should return 400 if name is not provided', async () => {
+    test('should return 400 (badReuqest) if name is not provided', async () => {
       const { sut } = makeSut()
       const { body: { name, ...requestWithoutName } } = makeFakeRequest()
       const result = await sut.handle({ body: requestWithoutName })
-      expect(result.statusCode).toBe(400)
+      expect(result).toStrictEqual(badRequest(new RequiredFieldError('name')))
     })
 
-    test('should return 400 if description is not provided', async () => {
+    test('should return 400 (badReuqest) if description is not provided', async () => {
       const { sut } = makeSut()
       const { body: { description, ...requestWithoutDescription } } = makeFakeRequest()
       const result = await sut.handle({ body: requestWithoutDescription })
-      expect(result.statusCode).toBe(400)
+      expect(result).toStrictEqual(badRequest(new RequiredFieldError('description')))
     })
 
-    test('should return 400 if jmxProvider is not provided', async () => {
+    test('should return 400 (badReuqest) if jmxProvider is not provided', async () => {
       const { sut } = makeSut()
       const { body: { jmxProvider, ...requestWithoutJmxProvider } } = makeFakeRequest()
       const result = await sut.handle({ body: requestWithoutJmxProvider })
-      expect(result.statusCode).toBe(400)
+      expect(result).toStrictEqual(badRequest(new RequiredFieldError('jmxProvider')))
     })
 
-    test('should return 400 if jmxProvider is not recognized', async () => {
+    test('should return 400 (badReuqest) if jmxProvider is not recognized', async () => {
       const { sut } = makeSut()
       const httpRequest = { ...makeFakeRequest().body, ...{ jmxProvider: 'ANY_JMX_PROVIDER' } }
       const result = await sut.handle({ body: httpRequest })
-      expect(result.statusCode).toBe(400)
+      expect(result).toStrictEqual(badRequest(new InvalidFieldError('jmxProvider')))
     })
 
-    test('should return 400 if command is not provided', async () => {
+    test('should return 400 (badReuqest) if command is not provided', async () => {
       const { sut } = makeSut()
       const { body: { command, ...requestWithoutCommand } } = makeFakeRequest()
       const result = await sut.handle({ body: requestWithoutCommand })
-      expect(result.statusCode).toBe(400)
+      expect(result).toStrictEqual(badRequest(new RequiredFieldError('command')))
     })
   })
 
