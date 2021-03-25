@@ -51,7 +51,14 @@ describe('DbAddLoadProject UseCase', () => {
     expect(addStub).toHaveBeenCalledWith(makeFakeAddLoadProjectModel())
   })
 
-  test.todo('Should throws if AddLoadProjectRepository throws')
+  test('Should throws if AddLoadProjectRepository throws', async () => {
+    const { sut, addLoadProjectRepositoryStub } = makeSut()
+    jest.spyOn(addLoadProjectRepositoryStub, 'add')
+      .mockImplementationOnce(() => { throw new Error() })
+
+    const result = sut.add(makeFakeAddLoadProjectModel())
+    await expect(result).rejects.toThrowError()
+  })
 
   test.todo('Should return a LoadProject on success')
 })
