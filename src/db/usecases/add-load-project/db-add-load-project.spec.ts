@@ -60,5 +60,9 @@ describe('DbAddLoadProject UseCase', () => {
     await expect(result).rejects.toThrowError()
   })
 
-  test.todo('Should return a LoadProject on success')
+  test('Should return a LoadProject on success', async () => {
+    const { sut } = makeSut()
+    const result = await sut.add(makeFakeAddLoadProjectModel())
+    expect(result).toStrictEqual(makeFakeLoadProjectModel())
+  })
 })
