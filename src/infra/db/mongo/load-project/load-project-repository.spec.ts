@@ -1,0 +1,34 @@
+import { Collection } from 'mongodb'
+import { AddLoadProjectModel, JmxProvider } from '../../../../presentation/controller/load-project-controller-protocols'
+import { Collections } from '../helpers/collections'
+import { MongoHelper } from '../helpers/mongo-helper'
+import { LoadProjectMongoRepository } from './load-project-repository'
+
+const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
+  name: 'Any Name',
+  description: 'Any Description',
+  jmxProvider: JmxProvider.GIT,
+  command: 'any command'
+})
+describe('LoadProjectMongoRepository', () => {
+  let accountCollection: Collection
+  beforeAll(async () => {
+    await MongoHelper.connect(process.env.MONGO_URL as string)
+  })
+
+  beforeEach(async () => {
+    accountCollection = await MongoHelper.getCollection(Collections.loadProject)
+    await accountCollection.deleteMany({})
+  })
+
+  afterAll(async () => {
+    await MongoHelper.disconnect()
+  })
+  test('Should return a load project on add success', async () => {
+    const sut = new LoadProjectMongoRepository()
+    const result = await sut.add(makeFakeAddLoadProjectModel())
+    expect(result).toBeTruthy()
+    expect(result.id).toBeTruthy()
+    expect(result).toMatchObject(makeFakeAddLoadProjectModel())
+  })
+})
