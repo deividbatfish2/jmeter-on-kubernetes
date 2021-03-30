@@ -4,6 +4,7 @@ import { LoadProjectController } from './load-project-controller'
 import { RequiredFieldError } from '../error/required-field-error'
 import { InvalidFieldError } from '../error/invalid-field-error'
 import { ProjectNameInUse } from '../error/project-name-in-use-error'
+import { StatusProject } from '../../domain/models/status-project'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { name: 'Any Name', description: 'Any description', jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } }, command: 'any command' }
@@ -16,6 +17,7 @@ const makeAddLoadProjectStub = (): AddLoadProject => {
         id: 'any_id',
         name: 'any_name',
         description: 'any description',
+        status: StatusProject.STOPED,
         jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } },
         command: 'any command'
       }
