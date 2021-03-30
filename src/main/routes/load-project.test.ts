@@ -6,7 +6,7 @@ import app from '../config/app'
 describe('Load Project routes', () => {
   let loadProjectCollection
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   beforeEach(async () => {

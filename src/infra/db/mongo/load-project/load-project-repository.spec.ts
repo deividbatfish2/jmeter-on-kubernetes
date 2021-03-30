@@ -18,7 +18,7 @@ const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
 describe('LoadProjectMongoRepository', () => {
   let loadProjectCollection: Collection
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   beforeEach(async () => {
