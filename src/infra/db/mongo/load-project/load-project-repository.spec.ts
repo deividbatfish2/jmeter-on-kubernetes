@@ -11,14 +11,14 @@ const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
   command: 'any command'
 })
 describe('LoadProjectMongoRepository', () => {
-  let accountCollection: Collection
+  let loadProjectCollection: Collection
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
   })
 
   beforeEach(async () => {
-    accountCollection = await MongoHelper.getCollection(Collections.loadProject)
-    await accountCollection.deleteMany({})
+    loadProjectCollection = await MongoHelper.getCollection(Collections.loadProject)
+    await loadProjectCollection.deleteMany({})
   })
 
   afterAll(async () => {
