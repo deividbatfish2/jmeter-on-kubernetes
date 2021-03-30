@@ -3,6 +3,7 @@ import { InvalidFieldError } from '../error/invalid-field-error'
 import { RequiredFieldError } from '../error/required-field-error'
 import { badRequest, created, serverError } from '../utils/http-responses'
 import { Controller } from '../protocols/controller'
+import { ProjectNameInUse } from '../error/project-name-in-use-error'
 
 export class LoadProjectController implements Controller {
   constructor (private readonly addLoadProject: AddLoadProject) {}
@@ -19,7 +20,10 @@ export class LoadProjectController implements Controller {
     if (!Object.values(Provider).includes(jmxProvider.provider)) { return badRequest(new InvalidFieldError('jmxProvider')) }
 
     try {
-      await this.addLoadProject.add({ name, description, jmxProvider, command })
+      const loadProjectAdded = await this.addLoadProject.add({ name, description, jmxProvider, command })
+      if (!loadProjectAdded) {
+        return badRequest(new ProjectNameInUse())
+      }
       return created()
     } catch (e) {
       return serverError()
