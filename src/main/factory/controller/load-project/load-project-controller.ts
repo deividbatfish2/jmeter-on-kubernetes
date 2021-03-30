@@ -5,6 +5,6 @@ import { Controller } from '../../../../presentation/protocols/controller'
 
 export const makeLoadProjectController = (): Controller => {
   const loadProjectMongoRepository = new LoadProjectMongoRepository()
-  const dbAddLoadProject = new DbAddLoadProject(loadProjectMongoRepository)
+  const dbAddLoadProject = new DbAddLoadProject(loadProjectMongoRepository, loadProjectMongoRepository)
   return new LoadProjectController(dbAddLoadProject)
 }
