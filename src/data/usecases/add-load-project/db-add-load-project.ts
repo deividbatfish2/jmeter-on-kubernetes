@@ -1,4 +1,5 @@
 import { LoadProjectModel } from '../../../domain/models/load-project-model'
+import { StatusProject } from '../../../domain/models/status-project'
 import { AddLoadProject, AddLoadProjectModel } from '../../../domain/usecases/load-project/add-load-project'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
 import { FindLoadProjectByNameRepository } from '../../protocols/load-project/FindLoadProjectByNameRepository'
@@ -12,7 +13,7 @@ export class DbAddLoadProject implements AddLoadProject {
   async add (addLoadProject: AddLoadProjectModel): Promise<LoadProjectModel> {
     const loadProjectAlreadyExists = await this.findLoadProjectByNameRepository.findLoadProjectByName(addLoadProject.name)
     if (!loadProjectAlreadyExists) {
-      return await this.addLoadProjectRepository.add(addLoadProject)
+      return await this.addLoadProjectRepository.add({ ...addLoadProject, status: StatusProject.STOPED })
     }
     return null
   }
