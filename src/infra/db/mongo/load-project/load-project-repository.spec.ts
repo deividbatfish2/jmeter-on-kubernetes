@@ -7,7 +7,12 @@ import { LoadProjectMongoRepository } from './load-project-repository'
 const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
   name: 'Any Name',
   description: 'Any Description',
-  jmxProvider: Provider.GIT,
+  jmxProvider: {
+    provider: Provider.GIT,
+    specificFields: {
+      path: 'any_path'
+    }
+  },
   command: 'any command'
 })
 describe('LoadProjectMongoRepository', () => {
