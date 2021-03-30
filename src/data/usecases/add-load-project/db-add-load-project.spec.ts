@@ -1,3 +1,4 @@
+import { StatusProject } from '../../../domain/models/status-project'
 import { AddLoadProjectModel, Provider, LoadProjectModel } from '../../../presentation/controller/load-project-controller-protocols'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
 import { FindLoadProjectByNameRepository } from '../../protocols/load-project/FindLoadProjectByNameRepository'
@@ -7,6 +8,7 @@ const makeFakeLoadProjectModel = (): LoadProjectModel => ({
   id: 'any_id',
   name: 'Any Name',
   description: 'Any description',
+  status: StatusProject.STOPED,
   jmxProvider: {
     provider: Provider.GIT,
     specificFields: {
@@ -101,7 +103,7 @@ describe('DbAddLoadProject UseCase', () => {
 
       await sut.add(makeFakeAddLoadProjectModel())
 
-      expect(addStub).toHaveBeenCalledWith(makeFakeAddLoadProjectModel())
+      expect(addStub).toHaveBeenCalledWith({ ...makeFakeAddLoadProjectModel(), status: StatusProject.STOPED })
     })
 
     test('Should throws if AddLoadProjectRepository throws', async () => {
