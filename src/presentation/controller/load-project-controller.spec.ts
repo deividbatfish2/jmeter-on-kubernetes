@@ -3,6 +3,7 @@ import { badRequest, created, serverError } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
 import { RequiredFieldError } from '../error/required-field-error'
 import { InvalidFieldError } from '../error/invalid-field-error'
+import { ProjectNameInUse } from '../error/project-name-in-use-error'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { name: 'Any Name', description: 'Any description', jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } }, command: 'any command' }
@@ -81,6 +82,14 @@ describe('LoadProjectController', () => {
       const addSpy = jest.spyOn(addLoadProjectStub, 'add')
       await sut.handle(makeFakeRequest())
       expect(addSpy).toHaveBeenCalledWith(makeFakeRequest().body)
+    })
+
+    test('Should return a ProjectNameInUseError if AddLoadProject returns null', async () => {
+      const { sut, addLoadProjectStub } = makeSut()
+      jest.spyOn(addLoadProjectStub, 'add')
+        .mockImplementationOnce(async () => null)
+      const result = await sut.handle(makeFakeRequest())
+      expect(result).toStrictEqual(badRequest(new ProjectNameInUse()))
     })
 
     test('Should return 500 (serverError) if AddLoadProject throws', async () => {
