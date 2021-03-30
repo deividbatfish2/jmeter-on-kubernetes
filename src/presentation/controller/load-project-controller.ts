@@ -1,4 +1,4 @@
-import { JmxProvider, AddLoadProject, HttpRequest, HttpResponse } from './load-project-controller-protocols'
+import { Provider, AddLoadProject, HttpRequest, HttpResponse } from './load-project-controller-protocols'
 import { InvalidFieldError } from '../error/invalid-field-error'
 import { RequiredFieldError } from '../error/required-field-error'
 import { badRequest, created, serverError } from '../utils/http-responses'
@@ -16,7 +16,7 @@ export class LoadProjectController implements Controller {
 
     const { name, description, jmxProvider, command } = req.body
 
-    if (!Object.values(JmxProvider).includes(jmxProvider)) { return badRequest(new InvalidFieldError('jmxProvider')) }
+    if (!Object.values(Provider).includes(jmxProvider.provider)) { return badRequest(new InvalidFieldError('jmxProvider')) }
 
     try {
       await this.addLoadProject.add({ name, description, jmxProvider, command })

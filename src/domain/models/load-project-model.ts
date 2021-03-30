@@ -1,4 +1,9 @@
-import { JmxProvider } from './jmx-provider'
+import { Provider } from './jmx-provider'
+
+export interface JmxProvider {
+  provider: Provider
+  specificFields: any
+}
 
 export interface LoadProjectModel {
   id: string

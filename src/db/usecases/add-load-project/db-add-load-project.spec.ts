@@ -1,4 +1,4 @@
-import { AddLoadProjectModel, JmxProvider, LoadProjectModel } from '../../../presentation/controller/load-project-controller-protocols'
+import { AddLoadProjectModel, Provider, LoadProjectModel } from '../../../presentation/controller/load-project-controller-protocols'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
 import { DbAddLoadProject } from './db-add-load-project'
 
@@ -6,14 +6,24 @@ const makeFakeLoadProjectModel = (): LoadProjectModel => ({
   id: 'any_id',
   name: 'Any Name',
   description: 'Any description',
-  jmxProvider: JmxProvider.GIT,
+  jmxProvider: {
+    provider: Provider.GIT,
+    specificFields: {
+      path: 'any_path'
+    }
+  },
   command: 'any command'
 })
 
 const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
   name: 'Any Name',
   description: 'Any description',
-  jmxProvider: JmxProvider.GIT,
+  jmxProvider: {
+    provider: Provider.GIT,
+    specificFields: {
+      path: 'any_path'
+    }
+  },
   command: 'any command'
 })
 

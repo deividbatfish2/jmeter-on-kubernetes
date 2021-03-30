@@ -1,11 +1,11 @@
-import { JmxProvider, LoadProjectModel, AddLoadProject, AddLoadProjectModel, HttpRequest } from './load-project-controller-protocols'
+import { Provider, LoadProjectModel, AddLoadProject, AddLoadProjectModel, HttpRequest } from './load-project-controller-protocols'
 import { badRequest, created, serverError } from '../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
 import { RequiredFieldError } from '../error/required-field-error'
 import { InvalidFieldError } from '../error/invalid-field-error'
 
 const makeFakeRequest = (): HttpRequest => ({
-  body: { name: 'Any Name', description: 'Any description', jmxProvider: JmxProvider.GIT, command: 'any command' }
+  body: { name: 'Any Name', description: 'Any description', jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } }, command: 'any command' }
 })
 
 const makeAddLoadProjectStub = (): AddLoadProject => {
@@ -15,7 +15,7 @@ const makeAddLoadProjectStub = (): AddLoadProject => {
         id: 'any_id',
         name: 'any_name',
         description: 'any description',
-        jmxProvider: JmxProvider.GIT,
+        jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } },
         command: 'any command'
       }
     }

@@ -1,5 +1,4 @@
-import { JmxProvider } from '../../models/jmx-provider'
-import { LoadProjectModel } from '../../models/load-project-model'
+import { JmxProvider, LoadProjectModel } from '../../models/load-project-model'
 
 export interface AddLoadProjectModel {
   name: string

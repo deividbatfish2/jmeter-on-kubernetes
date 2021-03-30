@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb'
-import { AddLoadProjectModel, JmxProvider } from '../../../../presentation/controller/load-project-controller-protocols'
+import { AddLoadProjectModel, Provider } from '../../../../presentation/controller/load-project-controller-protocols'
 import { Collections } from '../helpers/collections'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { LoadProjectMongoRepository } from './load-project-repository'
@@ -7,7 +7,7 @@ import { LoadProjectMongoRepository } from './load-project-repository'
 const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
   name: 'Any Name',
   description: 'Any Description',
-  jmxProvider: JmxProvider.GIT,
+  jmxProvider: Provider.GIT,
   command: 'any command'
 })
 describe('LoadProjectMongoRepository', () => {
