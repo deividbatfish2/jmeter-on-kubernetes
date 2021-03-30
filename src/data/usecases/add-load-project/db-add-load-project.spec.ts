@@ -40,7 +40,7 @@ const makeAddLoadProjectRepositoryStub = (): AddLoadProjectRepository => {
 const makeFindLoadProjectByNameRepositoryStub = (): FindLoadProjectByNameRepository => {
   class FindLoadProjectByNameRepositoryStub implements FindLoadProjectByNameRepository {
     async findLoadProjectByName (name: string): Promise<LoadProjectModel> {
-      return makeFakeLoadProjectModel()
+      return null
     }
   }
   return new FindLoadProjectByNameRepositoryStub()
@@ -81,6 +81,15 @@ describe('DbAddLoadProject UseCase', () => {
 
       const result = sut.add(makeFakeAddLoadProjectModel())
       await expect(result).rejects.toThrowError()
+    })
+
+    test('Should retunr null if FindLoadProjectByNameRepository returns a load project', async () => {
+      const { sut, findLoadProjectByNameRepositoryStub } = makeSut()
+      jest.spyOn(findLoadProjectByNameRepositoryStub, 'findLoadProjectByName')
+        .mockImplementationOnce(async () => makeFakeLoadProjectModel())
+
+      const result = await sut.add(makeFakeAddLoadProjectModel())
+      expect(result).toBeNull()
     })
   })
 
