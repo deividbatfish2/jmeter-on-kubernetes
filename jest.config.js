@@ -2,7 +2,9 @@ module.exports = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coveragePathIgnorePatterns: [
-    '.+/protocols/.+\\.ts'
+    '.+/protocols/.+\\.ts',
+    '.+/config/.+\\.ts',
+    '.+/main/server.ts'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
