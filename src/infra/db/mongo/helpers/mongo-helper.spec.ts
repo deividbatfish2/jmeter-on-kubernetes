@@ -1,4 +1,4 @@
-import { MongoHelper as sut } from './mongo-helper'
+import { MongoHelper, MongoHelper as sut } from './mongo-helper'
 
 describe('Mongo Helper', () => {
   beforeAll(async () => {
@@ -15,5 +15,11 @@ describe('Mongo Helper', () => {
     await sut.disconnect()
     accountCollection = await sut.getCollection('account')
     expect(accountCollection).toBeTruthy()
+  })
+
+  test('Should retrun null if collection is null', () => {
+    const result = MongoHelper.map<any>(null)
+
+    expect(result).toBeFalsy()
   })
 })
