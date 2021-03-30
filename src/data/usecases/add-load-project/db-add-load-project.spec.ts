@@ -1,5 +1,6 @@
 import { AddLoadProjectModel, Provider, LoadProjectModel } from '../../../presentation/controller/load-project-controller-protocols'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
+import { FindLoadProjectByNameRepository } from '../../protocols/load-project/FindLoadProjectByNameRepository'
 import { DbAddLoadProject } from './db-add-load-project'
 
 const makeFakeLoadProjectModel = (): LoadProjectModel => ({
@@ -36,38 +37,72 @@ const makeAddLoadProjectRepositoryStub = (): AddLoadProjectRepository => {
   return new AddLoadProjectRepositoryStub()
 }
 
+const makeFindLoadProjectByNameRepositoryStub = (): FindLoadProjectByNameRepository => {
+  class FindLoadProjectByNameRepositoryStub implements FindLoadProjectByNameRepository {
+    async findLoadProjectByName (name: string): Promise<LoadProjectModel> {
+      return makeFakeLoadProjectModel()
+    }
+  }
+  return new FindLoadProjectByNameRepositoryStub()
+}
+
 interface SutTypes {
+  findLoadProjectByNameRepositoryStub: FindLoadProjectByNameRepository
   addLoadProjectRepositoryStub: AddLoadProjectRepository
   sut: DbAddLoadProject
 }
 
 const makeSut = (): SutTypes => {
+  const findLoadProjectByNameRepositoryStub = makeFindLoadProjectByNameRepositoryStub()
   const addLoadProjectRepositoryStub = makeAddLoadProjectRepositoryStub()
-  const sut = new DbAddLoadProject(addLoadProjectRepositoryStub)
+  const sut = new DbAddLoadProject(addLoadProjectRepositoryStub, findLoadProjectByNameRepositoryStub)
 
   return {
-    sut, addLoadProjectRepositoryStub
+    sut, addLoadProjectRepositoryStub, findLoadProjectByNameRepositoryStub
   }
 }
 
 describe('DbAddLoadProject UseCase', () => {
-  test('Should call AddLoadProjectRepository with correct values', async () => {
-    const { sut, addLoadProjectRepositoryStub } = makeSut()
+  describe('FindLoadProjectByNameRepository', () => {
+    test('Should call FindLoadProjectByNameRepository with correct name', async () => {
+      const { sut, findLoadProjectByNameRepositoryStub } = makeSut()
 
-    const addStub = jest.spyOn(addLoadProjectRepositoryStub, 'add')
+      const addStub = jest.spyOn(findLoadProjectByNameRepositoryStub, 'findLoadProjectByName')
 
-    await sut.add(makeFakeAddLoadProjectModel())
+      await sut.add(makeFakeAddLoadProjectModel())
 
-    expect(addStub).toHaveBeenCalledWith(makeFakeAddLoadProjectModel())
+      expect(addStub).toHaveBeenCalledWith(makeFakeAddLoadProjectModel().name)
+    })
+
+    test('Should throws if FindLoadProjectByNameRepository throws', async () => {
+      const { sut, findLoadProjectByNameRepositoryStub } = makeSut()
+      jest.spyOn(findLoadProjectByNameRepositoryStub, 'findLoadProjectByName')
+        .mockImplementationOnce(() => { throw new Error() })
+
+      const result = sut.add(makeFakeAddLoadProjectModel())
+      await expect(result).rejects.toThrowError()
+    })
   })
 
-  test('Should throws if AddLoadProjectRepository throws', async () => {
-    const { sut, addLoadProjectRepositoryStub } = makeSut()
-    jest.spyOn(addLoadProjectRepositoryStub, 'add')
-      .mockImplementationOnce(() => { throw new Error() })
+  describe('AddLoadProjectRepository', () => {
+    test('Should call AddLoadProjectRepository with correct values', async () => {
+      const { sut, addLoadProjectRepositoryStub } = makeSut()
 
-    const result = sut.add(makeFakeAddLoadProjectModel())
-    await expect(result).rejects.toThrowError()
+      const addStub = jest.spyOn(addLoadProjectRepositoryStub, 'add')
+
+      await sut.add(makeFakeAddLoadProjectModel())
+
+      expect(addStub).toHaveBeenCalledWith(makeFakeAddLoadProjectModel())
+    })
+
+    test('Should throws if AddLoadProjectRepository throws', async () => {
+      const { sut, addLoadProjectRepositoryStub } = makeSut()
+      jest.spyOn(addLoadProjectRepositoryStub, 'add')
+        .mockImplementationOnce(() => { throw new Error() })
+
+      const result = sut.add(makeFakeAddLoadProjectModel())
+      await expect(result).rejects.toThrowError()
+    })
   })
 
   test('Should return a LoadProject on success', async () => {
