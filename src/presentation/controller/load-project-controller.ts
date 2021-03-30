@@ -2,8 +2,9 @@ import { JmxProvider, AddLoadProject, HttpRequest, HttpResponse } from './load-p
 import { InvalidFieldError } from '../error/invalid-field-error'
 import { RequiredFieldError } from '../error/required-field-error'
 import { badRequest, created, serverError } from '../utils/http-responses'
+import { Controller } from '../protocols/controller'
 
-export class LoadProjectController {
+export class LoadProjectController implements Controller {
   constructor (private readonly addLoadProject: AddLoadProject) {}
 
   async handle (req: HttpRequest): Promise<HttpResponse> {
