@@ -10,7 +10,10 @@ export class DbAddLoadProject implements AddLoadProject {
   ) {}
 
   async add (addLoadProject: AddLoadProjectModel): Promise<LoadProjectModel> {
-    await this.findLoadProjectByNameRepository.findLoadProjectByName(addLoadProject.name)
-    return await this.addLoadProjectRepository.add(addLoadProject)
+    const loadProjectAlreadyExists = await this.findLoadProjectByNameRepository.findLoadProjectByName(addLoadProject.name)
+    if (!loadProjectAlreadyExists) {
+      return await this.addLoadProjectRepository.add(addLoadProject)
+    }
+    return null
   }
 }
