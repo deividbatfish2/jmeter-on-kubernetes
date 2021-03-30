@@ -24,7 +24,12 @@ describe('Load Project routes', () => {
         .send({
           name: 'Any Name',
           description: 'Any Description',
-          jmxProvider: 'git',
+          jmxProvider: {
+            provider: 'git',
+            specificFields: {
+              path: 'any_path'
+            }
+          },
           command: 'any command'
         })
         .expect(201)
