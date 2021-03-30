@@ -60,4 +60,16 @@ describe('Adapt Route', () => {
 
     expect(statusSpy).toHaveBeenCalledWith(500)
   })
+
+  test('Should call status with correct value on success', async () => {
+    const { sut, controllerStub, resStub, reqStub } = makeSut()
+
+    const statusSpy = jest.spyOn(resStub, 'status')
+
+    const handle = sut(controllerStub)
+
+    await handle(reqStub, resStub)
+
+    expect(statusSpy).toHaveBeenCalledWith(201)
+  })
 })
