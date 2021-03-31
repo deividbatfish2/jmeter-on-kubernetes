@@ -1,0 +1,22 @@
+version: "3.7"
+services: 
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks: 
+      - jmeter
+  jmeter-k8s:
+    image: jmeter-k8s
+    ports: 
+      - "3000:3000"
+    networks: 
+      - jmeter
+    depends_on: 
+     - mongodb
+    environment: 
+      MONGO_URL: "mongodb://mongodb.jmeter-k8s_jmeter:27017/jmeter-k8s"
+
+networks: 
+  jmeter:
+    

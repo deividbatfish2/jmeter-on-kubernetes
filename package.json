@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "start": "npm run build && node dist/main/server.js",
+    "up": "npm run build && npm start",
+    "start": "node dist/main/server.js",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm t -- --watch -c jest.unit.config.js",
@@ -13,7 +14,6 @@
     "test:staged": "npm t -- --findRelatedTests",
     "test:ci": "npm t -- --coverage",
     "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
-    "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "keywords": [],
