@@ -1,4 +1,17 @@
 language: node_js
 node_js:
   - 14
-script: npm run test:coveralls
+
+jobs:
+  include:
+    - stage: test
+      script: npm run test:coveralls
+
+    - stage: build docker image
+      if: branch = main
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t jmeter-k8s .
+      - docker images
+      - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+      - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
