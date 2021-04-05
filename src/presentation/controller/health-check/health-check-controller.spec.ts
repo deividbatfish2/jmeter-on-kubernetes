@@ -25,6 +25,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Health Check Controller', () => {
+  describe('DataHelper', () => {
+    test('Should call DateHelper', async () => {
+      const { sut, dateHelperStub } = makeSut()
+      const nowSpy = jest.spyOn(dateHelperStub, 'now')
+
+      await sut.handle({})
+
+      expect(nowSpy).toBeCalledTimes(1)
+    })
+  })
   describe('Success', () => {
     test('Should return 200 on success', async () => {
       const { sut } = makeSut()
