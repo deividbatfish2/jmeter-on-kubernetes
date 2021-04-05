@@ -1,5 +1,5 @@
 import { DateHelper } from '../../utils/date/date-helper-protocol'
-import { ok } from '../../utils/http-responses'
+import { ok, serverError } from '../../utils/http-responses'
 import { HealthCheckController } from './health-check-controller'
 
 const makeDateHelperStub = (): DateHelper => {
@@ -33,6 +33,16 @@ describe('Health Check Controller', () => {
       await sut.handle({})
 
       expect(nowSpy).toBeCalledTimes(1)
+    })
+
+    test('Should return 500 if DateHelper throws', async () => {
+      const { sut, dateHelperStub } = makeSut()
+      jest.spyOn(dateHelperStub, 'now')
+        .mockImplementationOnce(() => { throw new Error() })
+
+      const result = await sut.handle({})
+
+      expect(result).toStrictEqual(serverError())
     })
   })
   describe('Success', () => {
