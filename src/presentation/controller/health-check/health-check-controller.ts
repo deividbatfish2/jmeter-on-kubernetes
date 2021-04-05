@@ -6,6 +6,7 @@ import { HttpRequest, HttpResponse } from '../load-project/load-project-controll
 export class HealthCheckController implements Controller {
   constructor (private readonly dateHelper: DateHelper) {}
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    return ok({ timestamp: 1617664390886 })
+    const timestamp = this.dateHelper.now()
+    return ok({ timestamp })
   }
 }
