@@ -1,5 +1,10 @@
 import { HttpResponse } from '../protocols/http'
 
+export const ok = (body?: any): HttpResponse => ({
+  statusCode: 200,
+  body
+})
+
 export const created = (): HttpResponse => ({
   statusCode: 201
 })
