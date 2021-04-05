@@ -1,5 +1,7 @@
 import { StatusProject } from '../../../domain/models/status-project'
-import { AddLoadProjectModel, Provider, LoadProjectModel } from '../../../presentation/controller/load-project-controller-protocols'
+import { Provider } from '../../../domain/models/jmx-provider'
+import { LoadProjectModel } from '../../../domain/models/load-project-model'
+import { AddLoadProjectModel } from '../../../domain/usecases/load-project/add-load-project'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
 import { FindLoadProjectByNameRepository } from '../../protocols/load-project/FindLoadProjectByNameRepository'
 import { DbAddLoadProject } from './db-add-load-project'

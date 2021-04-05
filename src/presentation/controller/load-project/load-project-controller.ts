@@ -1,9 +1,9 @@
 import { Provider, AddLoadProject, HttpRequest, HttpResponse } from './load-project-controller-protocols'
-import { InvalidFieldError } from '../error/invalid-field-error'
-import { RequiredFieldError } from '../error/required-field-error'
-import { badRequest, created, serverError } from '../utils/http-responses'
-import { Controller } from '../protocols/controller'
-import { ProjectNameInUse } from '../error/project-name-in-use-error'
+import { InvalidFieldError } from '../../error/invalid-field-error'
+import { RequiredFieldError } from '../../error/required-field-error'
+import { badRequest, created, serverError } from '../../utils/http-responses'
+import { Controller } from '../../protocols/controller'
+import { ProjectNameInUse } from '../../error/project-name-in-use-error'
 
 export class LoadProjectController implements Controller {
   constructor (private readonly addLoadProject: AddLoadProject) {}

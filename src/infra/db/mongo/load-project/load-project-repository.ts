@@ -1,7 +1,7 @@
 import { AddLoadProjectRepository } from '../../../../data/protocols/load-project/add-load-project-repository'
 import { FindLoadProjectByNameRepository } from '../../../../data/protocols/load-project/FindLoadProjectByNameRepository'
 import { LoadProjectModel } from '../../../../domain/models/load-project-model'
-import { AddLoadProjectModel } from '../../../../presentation/controller/load-project-controller-protocols'
+import { AddLoadProjectModel } from '../../../../domain/usecases/load-project/add-load-project'
 import { Collections } from '../helpers/collections'
 import { MongoHelper } from '../helpers/mongo-helper'
 

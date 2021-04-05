@@ -1,5 +1,6 @@
 import { Collection } from 'mongodb'
-import { AddLoadProjectModel, Provider } from '../../../../presentation/controller/load-project-controller-protocols'
+import { Provider } from '../../../../domain/models/jmx-provider'
+import { AddLoadProjectModel } from '../../../../domain/usecases/load-project/add-load-project'
 import { Collections } from '../helpers/collections'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { LoadProjectMongoRepository } from './load-project-repository'

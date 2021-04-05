@@ -1,10 +1,10 @@
 import { Provider, LoadProjectModel, AddLoadProject, AddLoadProjectModel, HttpRequest } from './load-project-controller-protocols'
-import { badRequest, created, serverError } from '../utils/http-responses'
+import { badRequest, created, serverError } from '../../utils/http-responses'
 import { LoadProjectController } from './load-project-controller'
-import { RequiredFieldError } from '../error/required-field-error'
-import { InvalidFieldError } from '../error/invalid-field-error'
-import { ProjectNameInUse } from '../error/project-name-in-use-error'
-import { StatusProject } from '../../domain/models/status-project'
+import { RequiredFieldError } from '../../error/required-field-error'
+import { InvalidFieldError } from '../../error/invalid-field-error'
+import { ProjectNameInUse } from '../../error/project-name-in-use-error'
+import { StatusProject } from '../../../domain/models/status-project'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { name: 'Any Name', description: 'Any description', jmxProvider: { provider: Provider.GIT, specificFields: { path: 'any_path' } }, command: 'any command' }
