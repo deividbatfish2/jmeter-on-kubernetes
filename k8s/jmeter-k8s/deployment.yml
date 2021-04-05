@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jmeter-k8s
+  labels:
+    name: jmeter-k8s
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jmeter-k8s-deployment
+  namespace: jmeter-k8s
+  labels:
+    app: jmeter-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jmeter-k8s
+  template:
+    metadata:
+      labels:
+        app: jmeter-k8s
+    spec:
+      containers:
+        - name: jmeter-k8s
+          image: deividbatfish2/jmeter-k8s:1.2.0
+          ports:
+            - containerPort: 3000
+              name: connection
+          env:
+            - name: MONGO_URL
+              value: mongodb://mongodb-service.jmeter-k8s:27017/jmeter-k8s
+          resources:
+            requests:
+              cpu: 64m
+              memory: 64M
+            limits:
+              cpu: 128m
+              memory: 128M

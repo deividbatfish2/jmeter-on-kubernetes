@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jmeter-k8s
+  labels:
+    name: jmeter-k8s
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  namespace: jmeter-k8s
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - port: 27017
+    targetPort: connection
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-statefulset
+  namespace: jmeter-k8s
+  labels:
+    name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo
+        ports:
+        - containerPort: 27017
+          name: connection
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
