@@ -1,3 +1,3 @@
-export interface DateHelper {
+export interface IDateHelper {
   now: () => number
 }

@@ -1,9 +1,9 @@
-import { DateHelper } from '../../utils/date/date-helper-protocol'
+import { IDateHelper } from '../../utils/date/date-helper-protocol'
 import { ok, serverError } from '../../utils/http-responses'
 import { HealthCheckController } from './health-check-controller'
 
-const makeDateHelperStub = (): DateHelper => {
-  class DateHelperStub implements DateHelper {
+const makeDateHelperStub = (): IDateHelper => {
+  class DateHelperStub implements IDateHelper {
     now (): number {
       return 1617664390886
     }
@@ -13,7 +13,7 @@ const makeDateHelperStub = (): DateHelper => {
 
 interface SutTypes {
   sut: HealthCheckController
-  dateHelperStub: DateHelper
+  dateHelperStub: IDateHelper
 }
 
 const makeSut = (): SutTypes => {

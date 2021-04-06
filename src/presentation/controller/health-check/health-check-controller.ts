@@ -1,10 +1,10 @@
 import { Controller } from '../../protocols/controller'
-import { DateHelper } from '../../utils/date/date-helper-protocol'
+import { IDateHelper } from '../../utils/date/date-helper-protocol'
 import { ok, serverError } from '../../utils/http-responses'
 import { HttpRequest, HttpResponse } from '../load-project/load-project-controller-protocols'
 
 export class HealthCheckController implements Controller {
-  constructor (private readonly dateHelper: DateHelper) {}
+  constructor (private readonly dateHelper: IDateHelper) {}
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const timestamp = this.dateHelper.now()
