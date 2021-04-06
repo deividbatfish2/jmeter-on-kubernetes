@@ -1,7 +1,7 @@
 import request from 'supertest'
-import { Collections } from '../../infra/db/mongo/helpers/collections'
-import { MongoHelper } from '../../infra/db/mongo/helpers/mongo-helper'
-import app from '../config/app'
+import { Collections } from '../../../infra/db/mongo/helpers/collections'
+import { MongoHelper } from '../../../infra/db/mongo/helpers/mongo-helper'
+import app from '../../config/app'
 
 describe('Load Project routes', () => {
   let loadProjectCollection
