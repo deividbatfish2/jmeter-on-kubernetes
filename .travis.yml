@@ -13,5 +13,7 @@ jobs:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t jmeter-k8s .
       - docker images
-      - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]") $DOCKER_USERNAME/jmeter-k8s:latest
-      - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]") $DOCKER_USERNAME/jmeter-k8s:latest
+      - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+      - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:latest
+      - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+      - docker push $DOCKER_USERNAME/jmeter-k8s:latest
