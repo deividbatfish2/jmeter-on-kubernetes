@@ -17,3 +17,4 @@ LICENSE
 .lintstagedrc.json
 README.md
 .travis.yml
+k8s

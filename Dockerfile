@@ -12,4 +12,5 @@ COPY package*.json ./
 RUN npm ci --only=production
 COPY --from=builder /usr/app/build/dist /usr/app/dist
 EXPOSE 3000
+VOLUME [ "/usr/app/data" ]
 CMD [ "npm", "start" ]
