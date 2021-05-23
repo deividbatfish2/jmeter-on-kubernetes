@@ -1,5 +1,5 @@
 import { AddLoadProjectRepository } from '../../../../data/protocols/load-project/add-load-project-repository'
-import { FindLoadProjectByNameRepository } from '../../../../data/protocols/load-project/FindLoadProjectByNameRepository'
+import { FindLoadProjectByNameRepository } from '../../../../data/protocols/load-project/find-load-project-by-name-repository'
 import { LoadProjectModel } from '../../../../domain/models/load-project-model'
 import { AddLoadProjectModel } from '../../../../domain/usecases/load-project/add-load-project'
 import { Collections } from '../helpers/collections'

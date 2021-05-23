@@ -2,7 +2,7 @@ import { LoadProjectModel } from '../../../domain/models/load-project-model'
 import { StatusProject } from '../../../domain/models/status-project'
 import { AddLoadProject, AddLoadProjectModel } from '../../../domain/usecases/load-project/add-load-project'
 import { AddLoadProjectRepository } from '../../protocols/load-project/add-load-project-repository'
-import { FindLoadProjectByNameRepository } from '../../protocols/load-project/FindLoadProjectByNameRepository'
+import { FindLoadProjectByNameRepository } from '../../protocols/load-project/find-load-project-by-name-repository'
 
 export class DbAddLoadProject implements AddLoadProject {
   constructor (
