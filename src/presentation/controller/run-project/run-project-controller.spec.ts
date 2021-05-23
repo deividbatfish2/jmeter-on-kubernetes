@@ -1,6 +1,6 @@
 import { RunLoadProject, RunLoadProjectModel } from '../../../domain/usecases/load-project/run-load-project'
 import { Validation } from '../../protocols/validation'
-import { badRequest } from '../../utils/http-responses'
+import { badRequest, serverError } from '../../utils/http-responses'
 import { HttpRequest } from '../load-project/load-project-controller-protocols'
 import { RunProjectController } from './run-project-controller'
 
@@ -46,7 +46,7 @@ const makeSut = (): SutTypes => {
 
 describe('Run Project Controller', () => {
   describe('Valdations', () => {
-    test('Should call validation with correct values', async () => {
+    test('should call validation with correct values', async () => {
       const { runProjectController, validation } = makeSut()
 
       const validateSpy = jest.spyOn(validation, 'validate')
@@ -58,7 +58,7 @@ describe('Run Project Controller', () => {
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
     })
 
-    test('Should return 400 (bad request) if validation returns error', async () => {
+    test('should return 400 (bad request) if validation returns error', async () => {
       const { runProjectController, validation } = makeSut()
       jest.spyOn(validation, 'validate').mockImplementationOnce((input: any) => new Error('Any error'))
 
@@ -70,7 +70,7 @@ describe('Run Project Controller', () => {
   })
 
   describe('Run Load Project Use case', () => {
-    test('Should call RunLoadProject with correct values', async () => {
+    test('should call RunLoadProject with correct values', async () => {
       const { runProjectController, runProjectStub } = makeSut()
       const runSpy = jest.spyOn(runProjectStub, 'run')
       const httpRequest = makeHttpRequest()
@@ -80,6 +80,24 @@ describe('Run Project Controller', () => {
         idProject: 'any-id',
         qtdRunners: 2
       })
+    })
+
+    test('shoud return badRequest if RunLoadProject returns error', async () => {
+      const { runProjectController, runProjectStub } = makeSut()
+      jest.spyOn(runProjectStub, 'run').mockImplementationOnce(async () => new Error('any error'))
+
+      const result = await runProjectController.handle(makeHttpRequest())
+
+      expect(result).toStrictEqual(badRequest(new Error('any error')))
+    })
+
+    test('should return 500 (serverError) if RunLoadProject throws', async () => {
+      const { runProjectController, runProjectStub } = makeSut()
+      jest.spyOn(runProjectStub, 'run').mockImplementationOnce(async () => { throw new Error('any error') })
+
+      const result = await runProjectController.handle(makeHttpRequest())
+
+      expect(result).toStrictEqual(serverError())
     })
   })
 })
