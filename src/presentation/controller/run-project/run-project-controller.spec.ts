@@ -1,6 +1,6 @@
 import { RunLoadProject, RunLoadProjectModel } from '../../../domain/usecases/load-project/run-load-project'
 import { Validation } from '../../protocols/validation'
-import { badRequest, serverError } from '../../utils/http-responses'
+import { badRequest, ok, serverError } from '../../utils/http-responses'
 import { HttpRequest } from '../load-project/load-project-controller-protocols'
 import { RunProjectController } from './run-project-controller'
 
@@ -98,6 +98,16 @@ describe('Run Project Controller', () => {
       const result = await runProjectController.handle(makeHttpRequest())
 
       expect(result).toStrictEqual(serverError())
+    })
+  })
+
+  describe('Success', () => {
+    test('should return 200 (ok) on success', async () => {
+      const { runProjectController } = makeSut()
+
+      const result = await runProjectController.handle(makeHttpRequest())
+
+      expect(result).toStrictEqual(ok())
     })
   })
 })
