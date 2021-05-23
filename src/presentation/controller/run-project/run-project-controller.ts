@@ -1,7 +1,7 @@
 import { RunLoadProject } from '../../../domain/usecases/load-project/run-load-project'
 import { Controller } from '../../protocols/controller'
 import { Validation } from '../../protocols/validation'
-import { badRequest, serverError } from '../../utils/http-responses'
+import { badRequest, ok, serverError } from '../../utils/http-responses'
 import { HttpRequest, HttpResponse } from '../load-project/load-project-controller-protocols'
 
 export class RunProjectController implements Controller {
@@ -25,7 +25,7 @@ export class RunProjectController implements Controller {
       if (loadProjectFails) {
         return badRequest(loadProjectFails)
       }
-      return null
+      return ok()
     } catch {
       return serverError()
     }
