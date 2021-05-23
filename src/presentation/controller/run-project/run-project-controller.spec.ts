@@ -1,4 +1,5 @@
 import { Validation } from '../../protocols/validation'
+import { badRequest } from '../../utils/http-responses'
 import { HttpRequest } from '../load-project/load-project-controller-protocols'
 import { RunProjectController } from './run-project-controller'
 
@@ -39,6 +40,20 @@ describe('Run Project Controller', () => {
       await runProjectController.handle(httpRequest)
 
       expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    })
+
+    test('Should return 400 (bad request) if validation returns error', async () => {
+      const { runProjectController, validation } = makeSut()
+      jest.spyOn(validation, 'validate').mockImplementationOnce((input: any) => new Error('Any error'))
+
+      const httpRequest: HttpRequest = {
+        body: {
+          anyField: 'any value'
+        }
+      }
+
+      const result = await runProjectController.handle(httpRequest)
+      expect(result).toStrictEqual(badRequest(new Error('Any error')))
     })
   })
 })
