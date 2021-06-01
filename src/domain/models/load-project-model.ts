@@ -1,7 +1,7 @@
 import { Provider } from './jmx-provider'
 import { StatusProject } from './status-project'
 
-export interface JmxProvider {
+export interface JmxProviderModel {
   provider: Provider
   specificFields: any
 }
@@ -11,6 +11,6 @@ export interface LoadProjectModel {
   name: string
   description: string
   status: StatusProject
-  jmxProvider: JmxProvider
+  jmxProvider: JmxProviderModel
   command: string
 }
