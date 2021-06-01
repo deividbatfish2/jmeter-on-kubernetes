@@ -3,6 +3,7 @@ import { ProjectNotFindedError } from '../../../domain/error/project-not-find-er
 import { StatusProject } from '../../../domain/models/status-project'
 import { RunLoadProject, RunLoadProjectModel } from '../../../domain/usecases/load-project/run-load-project'
 import { JmxProviderFactory } from '../../protocols/jmx-provider/jmx-provider-factory'
+import { JmxProvider } from '../../protocols/jmx-provider/JmxProvider'
 import { FindLoadProjectByIdRepository } from '../../protocols/load-project/find-load-project-by-id-repository'
 
 export class DbRunLoadProject implements RunLoadProject {
@@ -21,7 +22,9 @@ export class DbRunLoadProject implements RunLoadProject {
       return new ProjectInProgressError(idProject)
     }
 
-    this.jmxProviderFactory.getJmxProvider(projectFinded.jmxProvider.provider)
+    const { provider, specificFields } = projectFinded.jmxProvider
+    const jmxProvider: JmxProvider = this.jmxProviderFactory.getJmxProvider(provider)
+    await jmxProvider.getProject(specificFields)
     return null
   }
 }
