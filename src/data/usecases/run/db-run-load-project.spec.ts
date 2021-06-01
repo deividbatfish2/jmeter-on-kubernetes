@@ -15,7 +15,9 @@ const makeDefaultReturnOfProject = (): LoadProjectModel => (
     id: 'any_id',
     jmxProvider: {
       provider: Provider.GIT,
-      specificFields: {}
+      specificFields: {
+        anyField: 'any value'
+      }
     },
     name: 'Any Project',
     status: StatusProject.STOPED
@@ -38,27 +40,37 @@ const makeJmxProviderStub = (): JmxProvider => {
   return new JmxProviderStub()
 }
 
-const makeJmxProviderFactoryStub = (): JmxProviderFactory => {
+interface JmxTypes {
+  jmxProviderFactoryStub: JmxProviderFactory
+  jmxProviderStub: JmxProvider
+}
+
+const makeJmxProviderFactoryStub = (): JmxTypes => {
+  const jmxProviderStub = makeJmxProviderStub()
   class JmxProviderFactoryStub implements JmxProviderFactory {
     getJmxProvider (provider: Provider): JmxProvider {
-      return makeJmxProviderStub()
+      return jmxProviderStub
     }
   }
-  return new JmxProviderFactoryStub()
+  const jmxProviderFactoryStub = new JmxProviderFactoryStub()
+  return {
+    jmxProviderFactoryStub, jmxProviderStub
+  }
 }
 
 interface SutTypes {
   dbRunLoadProject: DbRunLoadProject
   findLoadProjectByIdRepositoryStub: FindLoadProjectByIdRepository
   jmxProviderFactoryStub: JmxProviderFactory
+  jmxProviderStub: JmxProvider
 }
 
 const makeSut = (): SutTypes => {
   const findLoadProjectByIdRepositoryStub = makeFindLoadProjectByIdRepositoryStub()
-  const jmxProviderFactoryStub = makeJmxProviderFactoryStub()
+  const { jmxProviderFactoryStub, jmxProviderStub } = makeJmxProviderFactoryStub()
   const dbRunLoadProject = new DbRunLoadProject(findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub)
   return {
-    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub
+    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, jmxProviderStub
   }
 }
 describe('K8s Run Project', () => {
@@ -103,6 +115,17 @@ describe('K8s Run Project', () => {
       await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
 
       expect(getJmxProviderSpy).toHaveBeenCalledWith(Provider.GIT)
+    })
+  })
+
+  describe('JmxProvider', () => {
+    test('Should call JmxProvider with correct values', async () => {
+      const { dbRunLoadProject, jmxProviderStub } = makeSut()
+      const getProjectSpy = jest.spyOn(jmxProviderStub, 'getProject')
+
+      await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+
+      expect(getProjectSpy).toBeCalledWith(makeDefaultReturnOfProject().jmxProvider.specificFields)
     })
   })
 })
