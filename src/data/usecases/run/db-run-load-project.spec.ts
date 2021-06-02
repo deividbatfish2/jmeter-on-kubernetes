@@ -127,5 +127,15 @@ describe('K8s Run Project', () => {
 
       expect(getProjectSpy).toBeCalledWith(makeDefaultReturnOfProject().jmxProvider.specificFields)
     })
+
+    test('Should throws if JmxProvider throws', async () => {
+      const { dbRunLoadProject, jmxProviderStub } = makeSut()
+      jest.spyOn(jmxProviderStub, 'getProject')
+        .mockImplementationOnce(() => { throw new Error('Any error') })
+
+      const result = dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+
+      await expect(result).rejects.toThrow(new Error('Any error'))
+    })
   })
 })
