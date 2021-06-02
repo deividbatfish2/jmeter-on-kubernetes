@@ -1,3 +1,4 @@
+import { ProjectCanNotBeLoadedError } from '../../../domain/error/project-can-not-be-loaded'
 import { ProjectInProgressError } from '../../../domain/error/project-in-progress-error'
 import { ProjectNotFindedError } from '../../../domain/error/project-not-find-error'
 import { StatusProject } from '../../../domain/models/status-project'
@@ -24,7 +25,10 @@ export class DbRunLoadProject implements RunLoadProject {
 
     const { provider, specificFields } = projectFinded.jmxProvider
     const jmxProvider: JmxProvider = this.jmxProviderFactory.getJmxProvider(provider)
-    await jmxProvider.getProject(specificFields)
+    const result = await jmxProvider.getProject(specificFields)
+    if (result instanceof Error) {
+      return new ProjectCanNotBeLoadedError(idProject)
+    }
     return null
   }
 }
