@@ -1,3 +1,4 @@
+import { ProjectCanNotBeLoadedError } from '../../../domain/error/project-can-not-be-loaded'
 import { ProjectInProgressError } from '../../../domain/error/project-in-progress-error'
 import { ProjectNotFindedError } from '../../../domain/error/project-not-find-error'
 import { Provider } from '../../../domain/models/jmx-provider'
@@ -33,9 +34,7 @@ const makeFindLoadProjectByIdRepositoryStub = (): FindLoadProjectByIdRepository 
 }
 const makeJmxProviderStub = (): JmxProvider => {
   class JmxProviderStub implements JmxProvider {
-    async getProject (specificFields: any): Promise<void> {
-
-    }
+    async getProject (specificFields: any): Promise<Error> { return null }
   }
   return new JmxProviderStub()
 }
@@ -119,7 +118,7 @@ describe('K8s Run Project', () => {
   })
 
   describe('JmxProvider', () => {
-    test('Should call JmxProvider with correct values', async () => {
+    test('should call JmxProvider with correct values', async () => {
       const { dbRunLoadProject, jmxProviderStub } = makeSut()
       const getProjectSpy = jest.spyOn(jmxProviderStub, 'getProject')
 
@@ -128,7 +127,17 @@ describe('K8s Run Project', () => {
       expect(getProjectSpy).toBeCalledWith(makeDefaultReturnOfProject().jmxProvider.specificFields)
     })
 
-    test('Should throws if JmxProvider throws', async () => {
+    test('should return a ProjectCanNotBeLoaded if JmxProvider returns error', async () => {
+      const { dbRunLoadProject, jmxProviderStub } = makeSut()
+      jest.spyOn(jmxProviderStub, 'getProject')
+        .mockImplementationOnce(async () => new ProjectCanNotBeLoadedError('any_id'))
+
+      const result = await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+
+      expect(result).toStrictEqual(new ProjectCanNotBeLoadedError('any_id'))
+    })
+
+    test('should throws if JmxProvider throws', async () => {
       const { dbRunLoadProject, jmxProviderStub } = makeSut()
       jest.spyOn(jmxProviderStub, 'getProject')
         .mockImplementationOnce(() => { throw new Error('Any error') })
