@@ -7,6 +7,7 @@ import { StatusProject } from '../../../domain/models/status-project'
 import { JmxProviderFactory } from '../../protocols/jmx-provider/jmx-provider-factory'
 import { JmxProvider } from '../../protocols/jmx-provider/JmxProvider'
 import { FindLoadProjectByIdRepository } from '../../protocols/load-project/find-load-project-by-id-repository'
+import { Runner, RunnerModel } from '../../protocols/runner/runner'
 import { DbRunLoadProject } from './db-run-load-project'
 
 const makeDefaultReturnOfProject = (): LoadProjectModel => (
@@ -26,7 +27,7 @@ const makeDefaultReturnOfProject = (): LoadProjectModel => (
 )
 const makeFindLoadProjectByIdRepositoryStub = (): FindLoadProjectByIdRepository => {
   class FindLoadProjectByIdRepositoryStub implements FindLoadProjectByIdRepository {
-    async findLoadProjectById (id: string): Promise<LoadProjectModel> {
+    async findLoadProjectById(id: string): Promise<LoadProjectModel> {
       return makeDefaultReturnOfProject()
     }
   }
@@ -34,7 +35,7 @@ const makeFindLoadProjectByIdRepositoryStub = (): FindLoadProjectByIdRepository 
 }
 const makeJmxProviderStub = (): JmxProvider => {
   class JmxProviderStub implements JmxProvider {
-    async getProject (specificFields: any): Promise<Error> { return null }
+    async getProject(specificFields: any): Promise<string | Error> { return 'any path' }
   }
   return new JmxProviderStub()
 }
@@ -47,7 +48,7 @@ interface JmxTypes {
 const makeJmxProviderFactoryStub = (): JmxTypes => {
   const jmxProviderStub = makeJmxProviderStub()
   class JmxProviderFactoryStub implements JmxProviderFactory {
-    getJmxProvider (provider: Provider): JmxProvider {
+    getJmxProvider(provider: Provider): JmxProvider {
       return jmxProviderStub
     }
   }
@@ -57,19 +58,30 @@ const makeJmxProviderFactoryStub = (): JmxTypes => {
   }
 }
 
+const makeRunnerStub = (): Runner => {
+  class RunnerStub implements Runner {
+    async runProject(runnerModel: RunnerModel): Promise<void> {
+      return
+    }
+  }
+  return new RunnerStub()
+}
+
 interface SutTypes {
   dbRunLoadProject: DbRunLoadProject
   findLoadProjectByIdRepositoryStub: FindLoadProjectByIdRepository
   jmxProviderFactoryStub: JmxProviderFactory
   jmxProviderStub: JmxProvider
+  runnerStub: Runner
 }
 
 const makeSut = (): SutTypes => {
   const findLoadProjectByIdRepositoryStub = makeFindLoadProjectByIdRepositoryStub()
   const { jmxProviderFactoryStub, jmxProviderStub } = makeJmxProviderFactoryStub()
-  const dbRunLoadProject = new DbRunLoadProject(findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub)
+  const runnerStub = makeRunnerStub()
+  const dbRunLoadProject = new DbRunLoadProject(findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, runnerStub)
   return {
-    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, jmxProviderStub
+    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, jmxProviderStub, runnerStub
   }
 }
 describe('K8s Run Project', () => {
@@ -145,6 +157,21 @@ describe('K8s Run Project', () => {
       const result = dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
 
       await expect(result).rejects.toThrow(new Error('Any error'))
+    })
+  })
+
+  describe('Runner', () => {
+    test('Shold call Runner with correct values', async () => {
+      const { dbRunLoadProject, runnerStub } = makeSut()
+      const runProjectSpy = jest.spyOn(runnerStub, 'runProject')
+
+      await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+
+      expect(runProjectSpy).toHaveBeenCalledWith({ pathOfProject: 'any path', totalOfRunners: 2 })
+    })
+
+    test('', async () => {
+      
     })
   })
 })
