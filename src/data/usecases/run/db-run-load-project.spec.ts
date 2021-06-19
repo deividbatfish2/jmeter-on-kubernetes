@@ -1,4 +1,5 @@
 import { ProjectCanNotBeLoadedError } from '../../../domain/error/project-can-not-be-loaded'
+import { ProjectCanNotBeRunnerError } from '../../../domain/error/project-can-not-be-runner'
 import { ProjectInProgressError } from '../../../domain/error/project-in-progress-error'
 import { ProjectNotFindedError } from '../../../domain/error/project-not-find-error'
 import { Provider } from '../../../domain/models/jmx-provider'
@@ -60,7 +61,7 @@ const makeJmxProviderFactoryStub = (): JmxTypes => {
 
 const makeRunnerStub = (): Runner => {
   class RunnerStub implements Runner {
-    async runProject(runnerModel: RunnerModel): Promise<void> {
+    async runProject(runnerModel: RunnerModel): Promise<Error> {
       return
     }
   }
@@ -161,7 +162,7 @@ describe('K8s Run Project', () => {
   })
 
   describe('Runner', () => {
-    test('Shold call Runner with correct values', async () => {
+    test('Should call Runner with correct values', async () => {
       const { dbRunLoadProject, runnerStub } = makeSut()
       const runProjectSpy = jest.spyOn(runnerStub, 'runProject')
 
@@ -170,8 +171,13 @@ describe('K8s Run Project', () => {
       expect(runProjectSpy).toHaveBeenCalledWith({ pathOfProject: 'any path', totalOfRunners: 2 })
     })
 
-    test('', async () => {
-      
+    test('Should return a ProjectCanNotBeRunnerError if Runner returns a error', async () => {
+      const { dbRunLoadProject, runnerStub } = makeSut()
+      jest.spyOn(runnerStub, 'runProject')
+        .mockImplementationOnce(async () => new ProjectCanNotBeRunnerError('any_id'))
+
+      const result = await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+      expect(result).toStrictEqual(new ProjectCanNotBeRunnerError('any_id'));
     })
   })
 })
