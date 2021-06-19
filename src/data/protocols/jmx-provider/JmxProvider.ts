@@ -1,3 +1,3 @@
 export interface JmxProvider {
-  getProject: (specificFields: any) => Promise<Error>
+  getProject: (specificFields: any) => Promise<string|Error>
 }

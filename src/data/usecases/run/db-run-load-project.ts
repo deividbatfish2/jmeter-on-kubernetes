@@ -6,15 +6,17 @@ import { RunLoadProject, RunLoadProjectModel } from '../../../domain/usecases/lo
 import { JmxProviderFactory } from '../../protocols/jmx-provider/jmx-provider-factory'
 import { JmxProvider } from '../../protocols/jmx-provider/JmxProvider'
 import { FindLoadProjectByIdRepository } from '../../protocols/load-project/find-load-project-by-id-repository'
+import { Runner } from '../../protocols/runner/runner'
 
 export class DbRunLoadProject implements RunLoadProject {
-  constructor (
+  constructor(
     private readonly findLoadProjectByIdRepository: FindLoadProjectByIdRepository,
-    private readonly jmxProviderFactory: JmxProviderFactory
+    private readonly jmxProviderFactory: JmxProviderFactory,
+    private readonly runner: Runner
   ) { }
 
-  async run (runLoadProjectModel: RunLoadProjectModel): Promise<Error> {
-    const { idProject } = runLoadProjectModel
+  async run(runLoadProjectModel: RunLoadProjectModel): Promise<Error> {
+    const { idProject, qtdRunners } = runLoadProjectModel
     const projectFinded = await this.findLoadProjectByIdRepository.findLoadProjectById(idProject)
     if (!projectFinded) {
       return new ProjectNotFindedError(idProject)
@@ -25,10 +27,11 @@ export class DbRunLoadProject implements RunLoadProject {
 
     const { provider, specificFields } = projectFinded.jmxProvider
     const jmxProvider: JmxProvider = this.jmxProviderFactory.getJmxProvider(provider)
-    const result = await jmxProvider.getProject(specificFields)
-    if (result instanceof Error) {
+    const pathToProject = await jmxProvider.getProject(specificFields)
+    if (pathToProject instanceof Error) {
       return new ProjectCanNotBeLoadedError(idProject)
     }
+    this.runner.runProject({ pathOfProject: pathToProject, totalOfRunners: qtdRunners })
     return null
   }
 }
