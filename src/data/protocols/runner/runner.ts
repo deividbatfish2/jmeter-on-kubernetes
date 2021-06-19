@@ -4,5 +4,5 @@ export interface RunnerModel {
 }
 
 export interface Runner {
-    runProject: ({ pathOfProject, totalOfRunners }: RunnerModel) => Promise<void>
+    runProject: ({ pathOfProject, totalOfRunners }: RunnerModel) => Promise<Error>
 }

@@ -1,4 +1,5 @@
 import { ProjectCanNotBeLoadedError } from '../../../domain/error/project-can-not-be-loaded'
+import { ProjectCanNotBeRunnerError } from '../../../domain/error/project-can-not-be-runner'
 import { ProjectInProgressError } from '../../../domain/error/project-in-progress-error'
 import { ProjectNotFindedError } from '../../../domain/error/project-not-find-error'
 import { StatusProject } from '../../../domain/models/status-project'
@@ -31,7 +32,10 @@ export class DbRunLoadProject implements RunLoadProject {
     if (pathToProject instanceof Error) {
       return new ProjectCanNotBeLoadedError(idProject)
     }
-    this.runner.runProject({ pathOfProject: pathToProject, totalOfRunners: qtdRunners })
+    const projectRunner = await this.runner.runProject({ pathOfProject: pathToProject, totalOfRunners: qtdRunners })
+    if (projectRunner instanceof Error) {
+      return new ProjectCanNotBeRunnerError(idProject)
+    }
     return null
   }
 }
