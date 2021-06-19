@@ -7,13 +7,15 @@ import { RunLoadProject, RunLoadProjectModel } from '../../../domain/usecases/lo
 import { JmxProviderFactory } from '../../protocols/jmx-provider/jmx-provider-factory'
 import { JmxProvider } from '../../protocols/jmx-provider/JmxProvider'
 import { FindLoadProjectByIdRepository } from '../../protocols/load-project/find-load-project-by-id-repository'
+import { UpdateLoadProjectStatusRepository } from '../../protocols/load-project/update-load-project-status-repository'
 import { Runner } from '../../protocols/runner/runner'
 
 export class DbRunLoadProject implements RunLoadProject {
   constructor(
     private readonly findLoadProjectByIdRepository: FindLoadProjectByIdRepository,
     private readonly jmxProviderFactory: JmxProviderFactory,
-    private readonly runner: Runner
+    private readonly runner: Runner,
+    private readonly updateLoadProjectStatusRepository: UpdateLoadProjectStatusRepository
   ) { }
 
   async run(runLoadProjectModel: RunLoadProjectModel): Promise<Error> {
@@ -32,10 +34,14 @@ export class DbRunLoadProject implements RunLoadProject {
     if (pathToProject instanceof Error) {
       return new ProjectCanNotBeLoadedError(idProject)
     }
+
     const projectRunner = await this.runner.runProject({ pathOfProject: pathToProject, totalOfRunners: qtdRunners })
+
     if (projectRunner instanceof Error) {
       return new ProjectCanNotBeRunnerError(idProject)
     }
+
+    await this.updateLoadProjectStatusRepository.updateStatus({ id: projectFinded.id, status: StatusProject.RUNNING })
     return null
   }
 }
