@@ -8,6 +8,7 @@ import { StatusProject } from '../../../domain/models/status-project'
 import { JmxProviderFactory } from '../../protocols/jmx-provider/jmx-provider-factory'
 import { JmxProvider } from '../../protocols/jmx-provider/JmxProvider'
 import { FindLoadProjectByIdRepository } from '../../protocols/load-project/find-load-project-by-id-repository'
+import { UpdateLoadProjecStatusModel, UpdateLoadProjectStatusRepository } from '../../protocols/load-project/update-load-project-status-repository'
 import { Runner, RunnerModel } from '../../protocols/runner/runner'
 import { DbRunLoadProject } from './db-run-load-project'
 
@@ -68,21 +69,32 @@ const makeRunnerStub = (): Runner => {
   return new RunnerStub()
 }
 
+const makeUpdateLoadProjectStatusRepositoryStub = (): UpdateLoadProjectStatusRepository => {
+  class UpdateLoadProjectStatusStub implements UpdateLoadProjectStatusRepository {
+    async updateStatus({ id, status }: UpdateLoadProjecStatusModel): Promise<void> {
+      return
+    }
+  }
+  return new UpdateLoadProjectStatusStub()
+}
+
 interface SutTypes {
   dbRunLoadProject: DbRunLoadProject
   findLoadProjectByIdRepositoryStub: FindLoadProjectByIdRepository
   jmxProviderFactoryStub: JmxProviderFactory
   jmxProviderStub: JmxProvider
   runnerStub: Runner
+  updateLoadProjectStatusRepositoryStub: UpdateLoadProjectStatusRepository
 }
 
 const makeSut = (): SutTypes => {
   const findLoadProjectByIdRepositoryStub = makeFindLoadProjectByIdRepositoryStub()
   const { jmxProviderFactoryStub, jmxProviderStub } = makeJmxProviderFactoryStub()
   const runnerStub = makeRunnerStub()
-  const dbRunLoadProject = new DbRunLoadProject(findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, runnerStub)
+  const updateLoadProjectStatusRepositoryStub = makeUpdateLoadProjectStatusRepositoryStub()
+  const dbRunLoadProject = new DbRunLoadProject(findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, runnerStub, updateLoadProjectStatusRepositoryStub)
   return {
-    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, jmxProviderStub, runnerStub
+    dbRunLoadProject, findLoadProjectByIdRepositoryStub, jmxProviderFactoryStub, jmxProviderStub, runnerStub, updateLoadProjectStatusRepositoryStub
   }
 }
 describe('K8s Run Project', () => {
@@ -187,6 +199,17 @@ describe('K8s Run Project', () => {
 
       const result = dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
       await expect(result).rejects.toStrictEqual(new Error('Any error'));
+    })
+  })
+
+  describe('UpdateLoadProjectStatusRepository', () => {
+    test('Should call UpdateLoadProjectStatus with correct values', async () => {
+      const { dbRunLoadProject, updateLoadProjectStatusRepositoryStub } = makeSut()
+      const updateStatus = jest.spyOn(updateLoadProjectStatusRepositoryStub, 'updateStatus')
+
+      await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+
+      expect(updateStatus).toHaveBeenCalledWith({ id: 'any_id', status: StatusProject.RUNNING })
     })
   })
 })
