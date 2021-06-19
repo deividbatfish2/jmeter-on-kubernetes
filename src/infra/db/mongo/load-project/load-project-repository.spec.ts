@@ -18,6 +18,7 @@ const makeFakeAddLoadProjectModel = (): AddLoadProjectModel => ({
 })
 describe('LoadProjectMongoRepository', () => {
   let loadProjectCollection: Collection
+
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -30,11 +31,26 @@ describe('LoadProjectMongoRepository', () => {
   afterAll(async () => {
     await MongoHelper.disconnect()
   })
-  test('Should return a load project on add success', async () => {
-    const sut = new LoadProjectMongoRepository()
-    const result = await sut.add(makeFakeAddLoadProjectModel())
-    expect(result).toBeTruthy()
-    expect(result.id).toBeTruthy()
-    expect(result).toMatchObject(makeFakeAddLoadProjectModel())
+
+  describe('AddLoadProjectRepository', () => {
+    test('Should return a load project on add success', async () => {
+      const sut = new LoadProjectMongoRepository()
+      const result = await sut.add(makeFakeAddLoadProjectModel())
+      expect(result).toBeTruthy()
+      expect(result.id).toBeTruthy()
+      expect(result).toMatchObject(makeFakeAddLoadProjectModel())
+    })
   })
+
+  describe('FindLoadProjectByNameRepository', () => {
+    test('Should find and retunr a load project by a name', async () => {
+      const sut = new LoadProjectMongoRepository()
+      await sut.add(makeFakeAddLoadProjectModel())
+      const result = await sut.findLoadProjectByName(makeFakeAddLoadProjectModel().name)
+      expect(result).toBeTruthy()
+      expect(result.id).toBeTruthy()
+      expect(result).toMatchObject(makeFakeAddLoadProjectModel())
+    })
+  })
+
 })
