@@ -179,5 +179,14 @@ describe('K8s Run Project', () => {
       const result = await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
       expect(result).toStrictEqual(new ProjectCanNotBeRunnerError('any_id'));
     })
+
+    test('Should trows if Runner trows', async () => {
+      const { dbRunLoadProject, runnerStub } = makeSut()
+      jest.spyOn(runnerStub, 'runProject')
+        .mockImplementationOnce(async () => { throw new Error('Any error') })
+
+      const result = dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+      await expect(result).rejects.toStrictEqual(new Error('Any error'));
+    })
   })
 })
