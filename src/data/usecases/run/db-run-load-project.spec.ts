@@ -203,13 +203,22 @@ describe('K8s Run Project', () => {
   })
 
   describe('UpdateLoadProjectStatusRepository', () => {
-    test('Should call UpdateLoadProjectStatus with correct values', async () => {
+    test('Should call UpdateLoadProjectStatusRepository with correct values', async () => {
       const { dbRunLoadProject, updateLoadProjectStatusRepositoryStub } = makeSut()
       const updateStatus = jest.spyOn(updateLoadProjectStatusRepositoryStub, 'updateStatus')
 
       await dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
 
       expect(updateStatus).toHaveBeenCalledWith({ id: 'any_id', status: StatusProject.RUNNING })
+    })
+    
+    test('Should trows if UpdateLoadProjectStatusRepository trows', async () => {
+      const { dbRunLoadProject, updateLoadProjectStatusRepositoryStub } = makeSut()
+      jest.spyOn(updateLoadProjectStatusRepositoryStub, 'updateStatus')
+        .mockImplementationOnce(async () => { throw new Error('Any error') })
+
+      const result = dbRunLoadProject.run({ idProject: 'any_id', qtdRunners: 2 })
+      await expect(result).rejects.toStrictEqual(new Error('Any error'));
     })
   })
 })
