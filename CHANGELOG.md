@@ -2,20 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.4.11](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.10...v1.4.11) (2021-07-23)
-
-### [1.4.10](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.9...v1.4.10) (2021-07-23)
-
-### [1.4.9](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.8...v1.4.9) (2021-07-23)
-
-### [1.4.8](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.7...v1.4.8) (2021-07-23)
-
-### [1.4.7](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.6...v1.4.7) (2021-07-23)
-
-### [1.4.6](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.5...v1.4.6) (2021-07-23)
-
-### [1.4.5](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.4...v1.4.5) (2021-07-23)
-
 ### [1.4.4](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.2...v1.4.4) (2021-07-23)
 
 

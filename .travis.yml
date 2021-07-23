@@ -17,8 +17,8 @@ jobs:
         - docker build -t jmeter-k8s .
         - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop
         - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop
-        - git push origin HEAD:develop
-        - git push --tags
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; git push origin HEAD:develop; fi
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; git push --tags; fi
 
     - stage: build docker image
       if: branch = main
