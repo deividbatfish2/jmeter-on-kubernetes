@@ -10,6 +10,8 @@ jobs:
     - stage: build docker image
       if: type = push AND branch = develop
       script:
+      - git config credential.helper "store --file=.git/credentials"
+      - echo "https://$GITHUB_ACCESS_KEY:@github.com" > .git/credentials
       - npm run release
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t jmeter-k8s .
