@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.4...v1.4.5) (2021-07-23)
+
+
+### Bug Fixes
+
+* generate tag version only in PR merge ([#12](https://github.com/deividbatfish2/jmeter-on-kubernetes/issues/12)) ([b0c5dfb](https://github.com/deividbatfish2/jmeter-on-kubernetes/commit/b0c5dfbe9778d43e250c783c2fc0d7b1f1e4bffc))
+* test changelog ([#11](https://github.com/deividbatfish2/jmeter-on-kubernetes/issues/11)) ([f335a34](https://github.com/deividbatfish2/jmeter-on-kubernetes/commit/f335a34d57c0813cb8f001412339fdd31902e3aa))
+
 ### [1.4.4](https://github.com/deividbatfish2/jmeter-on-kubernetes/compare/v1.4.2...v1.4.4) (2021-07-23)
 
 
