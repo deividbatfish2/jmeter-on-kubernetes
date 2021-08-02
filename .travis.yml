@@ -5,9 +5,11 @@ node_js:
 jobs:
   include:
     - stage: test
+      if: 'type = pull_request AND branch = develop'
       script: npm run test:coveralls
     
     - stage: SonarQube
+      if: 'type = pull_request AND branch = develop'
       addons:
         sonarcloud:
           organization: "deividbatfish2"
