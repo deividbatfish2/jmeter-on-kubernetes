@@ -11,8 +11,7 @@ jobs:
       addons:
         sonarcloud:
           organization: "deividbatfish2"
-          token:
-            secure: "$SONAR_QUBE"
+          token: "$SONAR_QUBE"
       script:
         # other script steps might be done before running the actual analysis
         - sonar-scanner
