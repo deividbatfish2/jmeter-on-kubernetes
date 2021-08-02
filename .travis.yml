@@ -42,7 +42,7 @@ jobs:
           organization: "deividbatfish2"
           token: "$SONAR_QUBE"
       script:
-        - VERSAO = npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]"
+        - VERSAO=$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
         - echo $VERSAO
         - sed -i 's/{{sonar.projectVersion}}/sonar.projectVersion=$VERSAO/' sonar-project.properties
         - cat sonar-project.properties 
