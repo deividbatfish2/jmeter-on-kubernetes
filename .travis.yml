@@ -18,18 +18,34 @@ jobs:
         - npm run test:ci
         - sonar-scanner
 
-    - stage: build docker image
+    - stage: Release new version
       if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
       script:
         - git config credential.helper "store --file=.git/credentials";
         - echo "https://$GITHUB_ACCESS_KEY:@github.com" > .git/credentials;
         - npm run release;
+        - git push origin HEAD:develop;
+        - git push --tags;
+
+    - stage: build docker image
+      if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
+      script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
         - docker build -t jmeter-k8s .;
         - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop;
         - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop;
-        - git push origin HEAD:develop;
-        - git push --tags;
+    
+    - stage: SonarQube Update Version
+      if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
+      addons:
+        sonarcloud:
+          organization: "deividbatfish2"
+          token: "$SONAR_QUBE"
+      script:
+        - sed -i 's/{{sonar.projectVersion}}/sonar.projectVersion=$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")/' sonar-project.properties
+        - cat sonar-project.properties 
+        - npm run test:ci
+        - sonar-scanner
 
     - stage: build docker image
       if: branch = main
