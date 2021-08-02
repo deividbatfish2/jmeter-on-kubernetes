@@ -32,8 +32,8 @@ jobs:
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
         - docker build -t jmeter-k8s .;
-        - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop;
-        - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")-develop;
+        - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]+\.[0-9]+\.[0-9]+")-develop;
+        - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]+\.[0-9]+\.[0-9]+")-develop;
     
     - stage: SonarQube Update Version
       if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
@@ -42,7 +42,7 @@ jobs:
           organization: "deividbatfish2"
           token: "$SONAR_QUBE"
       script:
-        - VERSAO=$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+        - VERSAO=$(npm version | grep jmeter-k8s | grep -o "[0-9]+\.[0-9]+\.[0-9]+")
         - echo $VERSAO
         - sed -i "s/{{sonar.projectVersion}}/sonar.projectVersion=$VERSAO/" sonar-project.properties
         - cat sonar-project.properties 
@@ -54,7 +54,7 @@ jobs:
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t jmeter-k8s .
-        - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+        - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]+\.[0-9]+\.[0-9]+")
         - docker tag jmeter-k8s $DOCKER_USERNAME/jmeter-k8s:latest
-        - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]\.[0-9]\.[0-9]")
+        - docker push $DOCKER_USERNAME/jmeter-k8s:$(npm version | grep jmeter-k8s | grep -o "[0-9]+\.[0-9]+\.[0-9]+")
         - docker push $DOCKER_USERNAME/jmeter-k8s:latest
