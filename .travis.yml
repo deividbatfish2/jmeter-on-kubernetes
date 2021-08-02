@@ -5,7 +5,18 @@ node_js:
 jobs:
   include:
     - stage: test
+      if: 'type = pull_request AND branch = develop'
       script: npm run test:coveralls
+    
+    - stage: SonarQube
+      if: 'type = pull_request AND branch = develop'
+      addons:
+        sonarcloud:
+          organization: "deividbatfish2"
+          token: "$SONAR_QUBE"
+      script:
+        - npm run test:ci
+        - sonar-scanner
 
     - stage: build docker image
       if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
