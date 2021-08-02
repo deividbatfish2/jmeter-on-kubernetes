@@ -13,7 +13,7 @@ jobs:
           organization: "deividbatfish2"
           token: "$SONAR_QUBE"
       script:
-        # other script steps might be done before running the actual analysis
+        - npm run test:ci
         - sonar-scanner
 
     - stage: build docker image
