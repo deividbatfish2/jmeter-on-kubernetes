@@ -6,6 +6,16 @@ jobs:
   include:
     - stage: test
       script: npm run test:coveralls
+    
+    - stage: SonarQube
+      addons:
+        sonarcloud:
+          organization: "deividbatfish2"
+          token:
+            secure: "$SONAR_QUBE"
+      script:
+        # other script steps might be done before running the actual analysis
+        - sonar-scanner
 
     - stage: build docker image
       if: 'type = push AND branch = develop AND commit_message !~ /chore\(release\): \d+\.\d+\.\d+/'
