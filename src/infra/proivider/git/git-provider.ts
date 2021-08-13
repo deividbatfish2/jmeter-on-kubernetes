@@ -5,7 +5,10 @@ export class GitProvider implements JmxProvider {
     constructor(private readonly gitAdapter: GitAdapter) { }
 
     async getProject(specificFields: any): Promise<string | Error> {
-        await this.gitAdapter.clone({ path: specificFields.path })
+        const result = await this.gitAdapter.clone({ path: specificFields.path })
+        if (result) {
+            return result
+        }
         return null
     }
 }
