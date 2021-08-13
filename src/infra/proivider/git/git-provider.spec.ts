@@ -42,4 +42,13 @@ describe('GitProvider', () => {
 
         await expect(error).rejects.toThrowError('any error')
     })
+
+    test('Should return error if GitAdapter returns an error', async () => {
+        const { gitAdapterStub, sut } = makeSut()
+        jest.spyOn(gitAdapterStub, 'clone').mockImplementationOnce(async () => new Error('any error'))
+
+        const result = await sut.getProject({ path: 'https://any_path' })
+
+        expect(result).toEqual(new Error('any error'))
+    })
 })
